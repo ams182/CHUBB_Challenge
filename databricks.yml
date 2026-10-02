@@ -1,0 +1,45 @@
+bundle:
+  name: chubb_mlops_portfolio
+
+resources:
+  jobs:
+    scoring_drift_pipeline:
+      name: "Pipeline 1: Scoring and Drift Monitor"
+      environments:
+        - environment_key: default_env
+          spec:
+            environment_version: "2"
+            dependencies:
+              - xgboost
+              - scikit-learn
+              - pandas
+      tasks:
+        - task_key: scoring_task
+          environment_key: default_env
+          spark_python_task:
+            python_file: src/scoring_pipeline.py
+      schedule:
+        quartz_cron_expression: "0 0 2 * * ?"
+        timezone_id: "America/Mexico_City"
+
+    retrain_promote_pipeline:
+      name: "Pipeline 2: On-Demand Retrain and Promote"
+      environments:
+        - environment_key: default_env
+          spec:
+            environment_version: "2"
+            dependencies:
+              - xgboost
+              - scikit-learn
+              - pandas
+      tasks:
+        - task_key: retrain_task
+          environment_key: default_env
+          spark_python_task:
+            python_file: src/retrain_pipeline.py
+
+targets:
+  default:
+    default: true
+    workspace:
+      host: https://dbc-b679398c-700f.cloud.databricks.com
