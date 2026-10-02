@@ -1,0 +1,30 @@
+bundle:
+  name: chubb_mlops_portfolio
+
+resources:
+  jobs:
+    scoring_drift_pipeline:
+      name: "Pipeline 1: Scoring and Drift Monitor"
+      tasks:
+        - task_key: scoring_task
+          spark_python_task:
+            python_file: ../src/scoring_pipeline.py
+          job_cluster_key: default_cluster
+      schedule:
+        quartz_cron_expression: "0 0 2 * * ?" # Runs daily at 2 AM
+        timezone_id: "America/Mexico_City"
+
+    retrain_promote_pipeline:
+      name: "Pipeline 2: On-Demand Retrain and Promote"
+      tasks:
+        - task_key: retrain_task
+          spark_python_task:
+            python_file: ../src/retrain_pipeline.py
+          job_cluster_key: default_cluster
+      # No schedule - On-Demand only
+
+  clusters:
+    default_cluster:
+      spark_version: "13.3.x-cpu-ml-scala2.12"
+      node_type_id: "Standard_DS3_v2"
+      num_workers: 1
