@@ -1,4 +1,6 @@
-# MLOps Architecture and Conclusions
+# MLOps Architecture and Conclusions 
+
+### note: thb: i used gemini to formalize and format this section :)
 
 ## 1. Architectural & Infrastructure Decisions
 The deployment relies on Databricks Asset Bundles (DABs) to cleanly decouple infrastructure declarations (`databricks.yml`) from core Python orchestration logic.
